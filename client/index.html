@@ -72,10 +72,21 @@
             background-color: #0cf;
         }
         .new-connection{
-            all: unset;
-            font-weight: lighter;
+            list-style-type: none;
+                        font-weight: lighter;
         }
-        #messages{}
+        #messages{
+
+            margin: 0;
+            padding: 0;
+        }
+        #messages > li{
+            padding:.5rem 1rem;
+
+        }
+        #messages > li:nth-child(odd){
+            background-color: rgba(218, 231, 240, 0.082);
+        }
     </style>
 
     <script type="module">
