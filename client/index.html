@@ -71,7 +71,10 @@
         #form > button:hover{
             background-color: #0cf;
         }
-
+        .new-connection{
+            all: unset;
+            font-weight: lighter;
+        }
         #messages{}
     </style>
 
@@ -86,6 +89,10 @@
 
     socket.on("chat message", (msg) =>{
         const item = `<li>${msg}</li>`
+        messages.insertAdjacentHTML("beforeend",item)
+    })
+    socket.on(("connection"), () =>{
+        const item = `<li class="new-connection">A user has connected</li>`
         messages.insertAdjacentHTML("beforeend",item)
     })
 
