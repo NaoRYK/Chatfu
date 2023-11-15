@@ -29,14 +29,8 @@ const port = process.env.PORT ?? 5200;
 
 const app = express();
 const server = createServer(app);
+const io = new Server(server);
 app.use(cors());
-const io = new Server(server, {
-  cors: {
-    origin: "https://chatfu-bice.vercel.app",
-    methods: ["GET", "POST"]
-  }
-});
-
 
 
 io.on("connection", async (socket) => {
