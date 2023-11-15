@@ -5,6 +5,7 @@ import { createServer } from "node:http";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import { log } from "node:console";
+import {cors} from "cors"
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ const port = process.env.PORT ?? 5200;
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
+app.use(cors());
 
 
 io.on("connection", async (socket) => {
