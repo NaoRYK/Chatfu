@@ -44,8 +44,9 @@
             height: 48px;
             left:0;
             padding:4px;
-            position:absolute;
+            position: absolute;
             right: 0;
+            background-color: rgb(67, 69, 70);
         }
 
         #input{
@@ -73,12 +74,16 @@
         }
         .new-connection{
             list-style-type: none;
-                        font-weight: lighter;
+            font-weight: lighter;
         }
         #messages{
-
+        
             margin: 0;
             padding: 0;
+            overflow-y: scroll;
+            height: 100%;
+            scroll-behavior: smooth;
+            padding-bottom:48px ;
         }
         #messages > li{
             padding:.5rem 1rem;
@@ -92,15 +97,40 @@
     <script type="module">
         import {io} from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"
 
-    const socket = io();
+        const getUsername = async () =>{
+        const username = localStorage.getItem('username')
+        if(username ){
+            console.log("User exist", username);
+            return username
+        }
+        
+
+        const res = await fetch("https://random-data-api.com/api/v2/users/")
+        console.log(res);
+        const {username:randomUsername} = await res.json()
+        console.log("nombre:",randomUsername);
+        localStorage.setItem('username',randomUsername)
+        return randomUsername
+    }
+    const socket = io({
+        auth:{
+            username:await getUsername()
+        }
+    });
 
     const form = document.getElementById("form");
     const input = document.getElementById("input");
     const messages = document.getElementById("messages")
 
-    socket.on("chat message", (msg) =>{
-        const item = `<li>${msg}</li>`
+
+
+
+
+    socket.on("chat message", (msg,username) =>{
+        const item = `
+      <li>   <small>${username}:</small> ${msg}</li>`
         messages.insertAdjacentHTML("beforeend",item)
+        messages.scrollTop = messages.scrollHeight;
     })
     socket.on(("connection"), () =>{
         const item = `<li class="new-connection">A user has connected</li>`
@@ -109,7 +139,7 @@
 
     form.addEventListener("submit", (e) =>{
         e.preventDefault()
-        console.log(input.value);
+
         if(input.value){
             socket.emit('chat message', input.value)
             input.value = ""
